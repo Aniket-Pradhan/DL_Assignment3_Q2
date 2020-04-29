@@ -27,9 +27,9 @@ def main():
     parser = argparse.ArgumentParser(description='Storing images in a well structured way')
     parser.add_argument('-d', '--datadir', type=str, required=True,
                         help='Path to the data files')
-    parser.add_argument('-o', '--outdir', required=False, default="./"
+    parser.add_argument('-o', '--outdir', required=False, default="./",
                         help='Path to output pickle file')
-    parser.add_argument('-n', '--outname', required=False, default="sprites.pkl"
+    parser.add_argument('-n', '--outname', required=False, default="sprites.pkl",
                         help='Name for the output pickle file')
 
     args = parser.parse_args()
