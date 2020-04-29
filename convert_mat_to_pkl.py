@@ -4,6 +4,7 @@ import h5py
 import pickle
 import argparse
 import numpy as np
+import matplotlib.pyplot as plt
 
 from progressbar import progressbar
 
@@ -15,9 +16,6 @@ with open('filename.pickle', 'wb') as handle:
 with open('filename.pickle', 'rb') as handle:
     b = pickle.load(handle)
 """
-def save_file(obj, path):
-    with open(path, 'wb') as handle:
-        pickle.dump(obj, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 def checkandcreatedir(pathdir):
     if not os.path.exists(pathdir):
@@ -29,18 +27,13 @@ def main():
                         help='Path to the data files')
     parser.add_argument('-o', '--outdir', required=False, default="./",
                         help='Path to output pickle file')
-    parser.add_argument('-n', '--outname', required=False, default="sprites.pkl",
-                        help='Name for the output pickle file')
-
     args = parser.parse_args()
 
     datadir = args.datadir
     outdir = args.outdir
-    outfile = args.outname
 
+    outdir = os.path.join(outdir, "raw_data")
     checkandcreatedir(outdir)
-
-    rawdata = {}
 
     files = os.listdir(datadir)
 
@@ -48,21 +41,21 @@ def main():
         if ".mat" not in file:
             continue
         filepath = os.path.join(datadir, file)
-
+        _outfilepath = os.path.join(outdir, file.split(".")[0])
+        checkandcreatedir(_outfilepath)
         try:
             with h5py.File(filepath, 'r') as f:
-                rawdata[file] = []
                 sprites = f.get('sprites')[()]
-                for s in sprites:
-                    s = f[s[0]][()]
-                    for ss in s:
-                        ss = ss.reshape((60, 60, 3), order='F')
-                        rawdata[file].append(ss)
+                for i, pose_i in enumerate(sprites):
+                    pose_i = f[pose_i[0]][()]
+                    for j, pose_j in enumerate(pose_i):
+                        outfile = "{}_{}.png".format(i, j)
+                        outfilepath = os.path.join(_outfilepath, outfile)
+                        pose_j = pose_j.reshape((60, 60, 3), order='F')
+                        plt.imsave(outfilepath, pose_j)
         except OSError:
             print("Corrupt file: {}".format(file))
 
-    outfile = os.path.join(outdir, outfile)
-    save_file(rawdata, outfile)
 
 if __name__ == "__main__":
     main()
