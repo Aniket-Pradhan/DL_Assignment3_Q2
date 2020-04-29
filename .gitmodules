@@ -1,0 +1,3 @@
+[submodule "cycle-consistent-vae"]
+	path = cycle-consistent-vae
+	url = https://github.com/Aniket-Pradhan/cycle-consistent-vae
