@@ -138,3 +138,5 @@ models/
 # temp/test files
 temp.py
 test.py
+
+.vscode/
