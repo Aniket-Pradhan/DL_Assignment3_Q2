@@ -127,3 +127,14 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Data folders
+data/
+
+# Model folders
+model/
+models/
+
+# temp/test files
+temp.py
+test.py
