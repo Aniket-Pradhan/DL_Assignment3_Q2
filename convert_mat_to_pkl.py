@@ -45,16 +45,21 @@ def main():
     files = os.listdir(datadir)
 
     for file in progressbar(files):
-        rawdata[file] = []
+        if ".mat" not in file:
+            continue
         filepath = os.path.join(datadir, file)
 
-        with h5py.File(filepath, 'r') as f:
-            sprites = f.get('sprites')[()]
-            for s in sprites:
-                s = f[s[0]][()]
-                for ss in s:
-                    ss = ss.reshape((60, 60, 3), order='F')
-                    rawdata[file].append(ss)
+        try:
+            with h5py.File(filepath, 'r') as f:
+                rawdata[file] = []
+                sprites = f.get('sprites')[()]
+                for s in sprites:
+                    s = f[s[0]][()]
+                    for ss in s:
+                        ss = ss.reshape((60, 60, 3), order='F')
+                        rawdata[file].append(ss)
+        except OSError:
+            print("Corrupt file: {}".format(file))
 
     outfile = os.path.join(outdir, outfile)
     save_file(rawdata, outfile)
