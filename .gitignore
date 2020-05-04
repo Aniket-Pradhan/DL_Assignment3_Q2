@@ -135,8 +135,12 @@ data/
 model/
 models/
 
+# Output folders
+outputs/
+
 # temp/test files
 temp.py
 test.py
 
+# Editor configs
 .vscode/
